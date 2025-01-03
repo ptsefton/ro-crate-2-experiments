@@ -7,7 +7,8 @@ Design goals:
 -  Cut down the context to ONLY things mentioned in the spec, while still defaulting to 
 - Deal with JSON-LD features such as @value and @language (instead of plain string values) which are note explicitly covered  -- TODO NOT SURE HOW YET
 - Add new levels of conformance so that a document can be parsed and THEN checked to see if it is a package.
-  - New Built-in Profiles that handle RO-Crate Packaging - Local vs 
+  - New Built-in Profiles that handle RO-Crate Packaging - Local vs Detatched??
+  -  Strip back context to only terms used 
 
 
 # Specification outline
@@ -23,17 +24,18 @@ RO-Crate 2.0 specifies two levels of conformance for a text-string known as the 
 
     There are two types of _RO-Crate Package_:
     -  A _Detached RO-Crate Package_:
-        - Is defined by an RO-Crate metadata document
+        - Is defined by a stand alone RO-Crate metadata document which may be stored in a file or distributed via an API
+        - If stored in a file, the filename SHOULD be `${slug}-ro-crate-metadata.json` where the variable `$slug` is a human readable version of the dataset's ID or name.
     -  A _Local RO-Crate Package_ meets all the criteria of a _Detached RO-Crate Package_ with the additional constraints that it:
        - Is defined within a file-system-like service as a directory (the _RO-Crate Root_) with the RO-Crate Metadata Document saved in a file-like entity with a file name of `ro-crate-metadata.json`.
        - References to files and directories in the RO-Crate Metadata Document are present in the RO-Crate.
 
-
-
 An RO-Crate Metadata Document (whether or not is is a valid package) may have rich contextual information about the data, how it was collected  and by whom, with details of funding, related information, equipment and facilities, or about abstract entities.  The details of this contextual information fall outside of the RO-Crate 2.0 specification, and are the domain of `RO-Crate Profiles`. Profiles are guides with optional validation services that describe how to use RO Crate Metadata for a particular purpose, such as interchanging workflow software, or structuring a archival repository of document.
 
 
-# Rule ROCOBJ _RO-Crate metadata document_ is a JSON_LD document which can be parsed to make an _RO-Crate Metadata Object_
+# RO-Crate rules
+
+## Rule ROCOBJ _RO-Crate metadata document_ is a JSON_LD document which can be parsed to make an _RO-Crate Metadata Object_
 
 This section specifies the rules that are used to check that a potential _RO-Crate Metadata Document is a string which conforms to this general structure.
 
@@ -48,27 +50,29 @@ This section specifies the rules that are used to check that a potential _RO-Cra
 
 
 `
-## Rule ROCJSON: The RO-Crate metadata document MUST be valid JSON 
+### Rule ROCJSON: The RO-Crate metadata document MUST be valid JSON 
 
 Implementation hint: Client software should attempt to parse a potential RO-Crate Metadata Document as a JSON string using the language's default JSON parser.
 
 Error Code: ERR_RCOJSON `The document does not parse as JSON: ${Pass though error from the JSON parser}`
 
 
-## Rule ROCCXT: The _RO-Crate metadata Object_ MUST have a  compliant @context 
+### Rule ROCCXT: The _RO-Crate metadata Object_ MUST have a  compliant @context 
 
-### Rule ROCXTKY: The _RO-Crate metadata Object_ has a top level key `@context`
+#### Rule ROCXTKY: The _RO-Crate metadata Object_ has a top level key `@context`
 
 Implementation hint: Clients should check for the existence of a key "@context" in the _RO-Crate metadata Object_.
 
-Error Code: ERR_ROCCTXKY `The document does not have a top level key @context `.
+Error Code: ERR_ROCCTXKY `The RO-Crate metadata Object does not have a top level key, @context `.
 
 
 
 
-## ROCCXTO
+### Rule: ROCCXTO one value of `@context` MUST be a string starting with INSERT URL TO CONTEXT
 
-The Context must be an object
+Implementation note: Cast the value of `@context` to an array. The Context array must contain one value that matches the RO-Crate 2 context URL
+
+
 
 ## ROCCXT_: 
 
