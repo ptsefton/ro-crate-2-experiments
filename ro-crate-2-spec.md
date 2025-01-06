@@ -2,9 +2,9 @@
 THIS IS A DRAFT, testing out some ideas for structuring v2 of Research Object Crate (RO-Crate)
 
 Design goals:
--  Focus on tool implementers (as per the stated goal of RO-Crate) NOT just examples
--  Make the core spec very tight -- remove distractions such as the PCDM things I put in, these are useful but should be considered matters for profiles
--  Cut down the context to ONLY things mentioned in the spec, while still defaulting to 
+-  Focus on tool implementers (as per the stated goal of RO-Crate) NOT just examples <https://github.com/ResearchObject/ro-crate/issues/386>
+-  Make the core spec very tight -- remove distractions such as the PCDM things I put in, these are useful but should be considered matters for profiles 
+-  Cut down the context to ONLY things mentioned in the spec? 
 - Deal with JSON-LD features such as @value and @language (instead of plain string values) which are note explicitly covered  -- TODO NOT SURE HOW YET
 - Add new levels of conformance so that a document can be parsed and THEN checked to see if it is a package.
   - New Built-in Profiles that handle RO-Crate Packaging - Local vs Detatched??
@@ -17,8 +17,10 @@ RO-Crate is a data _Packaging_ specification which allows for detailed, rigorous
 
 RO-Crate 2.0 specifies two levels of conformance for a text-string known as the RO-Crate Metadata Document.
 
-- *Syntactic*: The string can be parsed into an _RO-Crate Metadata Object_ which has structural conformance with this specification. (It is JSON, it is valid JSON-LD with a `@graph` and `@context` key which meet certain constraints). RO-Crate Metadata objects are the basis of RO-Crate packaging, but can be used for non-packaging purposes as well.
-- *Package Semantics*: The _Syntactically Valid RO-Crate Metadata Document_ also meets the semantic constraints to need to be an _RO_Crate Package_:
+- *Syntactically valid*: The string can be parsed into an _RO-Crate Metadata Object_ which has structural conformance with this specification. (It is JSON, it is valid JSON-LD with a `@graph` and `@context` key which meet certain constraints). While RO-Crate metada is compliant JSON-LD it is designed so that it may be processed by tools which _do not_ implement the full JSON-LD specification. 
+  
+  RO-Crate Metadata objects are the basis of RO-Crate packaging, but can be used for non-packaging purposes as well.
+- *Valid Package*: The _Syntactically Valid RO-Crate Metadata Document_ also meets the semantic constraints to need to be an _RO_Crate Package_:
     - The _Root Entity_ has "Dataset" as one of its types.
     - Must have a set of basic interoperability and discovery metadata (a license for re-use, identifier, author (creator), name, date)
 
@@ -88,13 +90,16 @@ There must be a top-level
 Error Code: ERR_ROCCTXKY `The document does not have a top level key @context `.
 
 
+TODO:
  Each entity in the graph MUST have a @id property which is unique in the @graph array
 
  Each entity in the graph MUST have a @type with at least one string value
+ 
+ Each entity in the graph MUST be flattened - that is embedded objects must ONLY have @id, @value, @language properties 
 
 1.2.5 There MUST be an entity with the @id of "ro-crate-metadata.json" 
 
-The entity with @id "ro-crate-metadata.json"  is known as the RO-Crate Metadata Descriptor
+The entity with @id `ro-crate-metadata.json`  is known as the RO-Crate Metadata Descriptor
 
 1.2.6 The RO-Crate Metadata Descriptor MUST have one @type of "Creative Work"
 
@@ -107,6 +112,8 @@ If all the points in 1 are satisfied the RO-Crate Metadata Document is said to b
 
 # RO-Crate Packaging
 
-The main funciton of RO-Crate is as a packaging method to describe locally present or remote file.
+The main function of RO-Crate is as a packaging method to describe locally present or remote files.
+
+TODO - rules for the special category of Data Entity 
 
 
