@@ -59,9 +59,9 @@ Implementation hint: Client software should attempt to parse a potential RO-Crat
 Error Code: ERR_RCOJSON `The document does not parse as JSON: ${Pass though error from the JSON parser}`
 
 
-### Rule ROCCXT: The _RO-Crate metadata Object_ MUST have a  compliant @context 
+### Rule ROC-CXT: The _RO-Crate metadata Object_ MUST have a  compliant @context 
 
-#### Rule ROCXTKY: The _RO-Crate metadata Object_ has a top level key `@context`
+#### Rule ROC-CXT-KEY: The _RO-Crate metadata Object_ has a top level key `@context`
 
 Implementation hint: Clients should check for the existence of a key "@context" in the _RO-Crate metadata Object_.
 
@@ -70,24 +70,21 @@ Error Code: ERR_ROCCTXKY `The RO-Crate metadata Object does not have a top level
 
 
 
-### Rule: ROCCXTO one value of `@context` MUST be a string starting with INSERT URL TO CONTEXT
+### Rule: ROC-CXT-ROC one value of `@context` MUST be a string starting with INSERT URL TO CONTEXT
 
 Implementation note: Cast the value of `@context` to an array. The Context array must contain one value that matches the RO-Crate 2 context URL
 
 
-
-## ROCCXT_: 
-
-Error Code: ERR_ROCCTX `The RO-Crate Metadata Object does not have a Context beginning with https://TOTO`
+Error: `The RO-Crate Metadata Object does not have a Context beginning with https://TOTO`
 
 
-## ROCGPH : The @graph is an array of JSON-LD entities which are flattened and compacted according to the JSON-LD specification
+## ROC-GPH : The @graph is an array of JSON-LD entities which are flattened and compacted according to the JSON-LD specification
 
-### Rule ROCGPHKY: There MUST  a `@graph` key
+### Rule ROC-GPH-KEY: There MUST  a `@graph` key
 
 There must be a top-level
 
-Error Code: ERR_ROCCTXKY `The document does not have a top level key @context `.
+Error: `The document does not have a top level key @context `.
 
 
 TODO:
@@ -97,15 +94,15 @@ TODO:
  
  Each entity in the graph MUST be flattened - that is embedded objects must ONLY have @id, @value, @language properties 
 
-1.2.5 There MUST be an entity with the @id of "ro-crate-metadata.json" 
+## Rule ROC-MED There MUST be an entity with the @id of "ro-crate-metadata.json" 
 
 The entity with @id `ro-crate-metadata.json`  is known as the RO-Crate Metadata Descriptor
 
-1.2.6 The RO-Crate Metadata Descriptor MUST have one @type of "Creative Work"
+### Rule ROC-MED-TYP: The RO-Crate Metadata Descriptor MUST have one @type of "Creative Work"
 
-1.2.7 The RO-Crate Metadata Descriptor MUST have a at least one conformsTo property that matches {"@id": "TODO"}
+### Rule ROC-MED-COT: The RO-Crate Metadata Descriptor MUST have a at least one conformsTo property that matches {"@id": "TODO"}
 
-1.2.8 The RO-Crate Metadata Descriptor MUST have an `about` property which is a reference to an another entity present in the '@graph',  which entity is known as the  _Root Entity_
+### Rule ROC-MED-ABT:The RO-Crate Metadata Descriptor MUST have an `about` property which is a reference to an another entity present in the '@graph',  which entity is known as the  _Root Entity_
 
 
 If all the points in 1 are satisfied the RO-Crate Metadata Document is said to be "Syntactically Correct RO-Crate compliant JSON"
