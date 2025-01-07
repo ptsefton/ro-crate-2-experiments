@@ -17,26 +17,34 @@ RO-Crate is a data _Packaging_ specification which allows for detailed, rigorous
 
 While RO-Crate metada is compliant JSON-LD it is designed so that it may be processed by tools which _do not_ implement the full JSON-LD specification. 
 
-RO-Crate conventions can also be used for describing entities other than datasets for applications where an easy-to-implement linked-data tool-set is required, for example, the Schema.org vocabulary, which is a set of RDF classes and properties, used by RO-Crate can be described and extended using an RO-Crate as a container. 
+RO-Crate conventions can also be used for describing entities other than datasets for applications where an easy-to-implement linked-data tool-set is required. As an example, the abstract the Schema.org vocabulary, which is a set of RDF classes and properties can be described and extended using an RO-Crate Metadata Document as a container. 
+
+
 
 RO-Crate 2.0 specifies two levels of conformance for a text-string known as the RO-Crate Metadata Document.
 
 - *Syntactically valid*: The string can be parsed into an _RO-Crate Metadata Object_ which has structural conformance with this specification. (It is JSON, it is valid JSON-LD with a `@graph` and `@context` key which meet certain constraints).
   
   RO-Crate Metadata objects are the basis of RO-Crate packaging, but can be used for non-packaging purposes as well.
+
+  An RO-Crate Metadata Document (whether or not is is a valid package) may have rich contextual information about the data, how it was collected  and by whom, with details of funding, related information, equipment and facilities, or about abstract entities.  The details of this contextual information are the domain of `RO-Crate Profiles` which are concerned with semantics. Profiles are guides with optional validation services that describe how to use RO Crate Metadata for a particular purpose, such as interchanging workflow software, or structuring a archival repository of document.
+
 - *Valid Package*: The _Syntactically Valid RO-Crate Metadata Document_ also meets the semantic constraints to need to be an _RO_Crate Package_:
-    - The _Root Entity_ has "Dataset" as one of its types.
-    - Must have a set of basic interoperability and discovery metadata (a license for re-use, identifier, author (creator), name, date)
+    - The _Root Entity_ conformsTo the _Default RO-Crate Packaging Profile_, which specifies the required  and recommended properties of the _Root Entity_ . In RO-Crate v2 conformance with this profile  is  optional and is indicated by the a reference to the _Default RO-Crate Packaging Profile_ as one of the values of the `conformsTo` proprties. When processing legacy crates with version <2 this conformance is assumed, as previous versions of RO-Crate included these requirements.
 
     There are two types of _RO-Crate Package_:
     -  A _Detached RO-Crate Package_:
         - Is defined by a stand alone RO-Crate metadata document which may be stored in a file or distributed via an API
         - If stored in a file, the filename SHOULD be `${slug}-ro-crate-metadata.json` where the variable `$slug` is a human readable version of the dataset's ID or name.
+        - The _Root Entity_ has a conformsTo property which references the _Detached RO-Crate Package Profile_
     -  A _Local RO-Crate Package_ meets all the criteria of a _Detached RO-Crate Package_ with the additional constraints that it:
        - Is defined within a file-system-like service as a directory (the _RO-Crate Root_) with the RO-Crate Metadata Document saved in a file-like entity with a file name of `ro-crate-metadata.json`.
        - References to files and directories in the RO-Crate Metadata Document are present in the RO-Crate.
+       - The _Root Entity_ has a conformsTo property which references the _Local RO-Crate Package Profile_
 
-An RO-Crate Metadata Document (whether or not is is a valid package) may have rich contextual information about the data, how it was collected  and by whom, with details of funding, related information, equipment and facilities, or about abstract entities.  The details of this contextual information fall outside of the RO-Crate 2.0 specification, and are the domain of `RO-Crate Profiles`. Profiles are guides with optional validation services that describe how to use RO Crate Metadata for a particular purpose, such as interchanging workflow software, or structuring a archival repository of document.
+
+
+
 
 
 # RO-Crate rules
@@ -72,8 +80,6 @@ Implementation hint: Clients should check for the existence of a key "@context" 
 Error Code: ERR_ROCCTXKY `The RO-Crate metadata Object does not have a top level key, @context `.
 
 
-
-
 ### Rule: ROC-CXT-ROC one value of `@context` MUST be a string starting with INSERT URL TO CONTEXT
 
 Implementation note: Cast the value of `@context` to an array. The Context array must contain one value that matches the RO-Crate 2 context URL
@@ -106,15 +112,47 @@ The entity with @id `ro-crate-metadata.json`  is known as the RO-Crate Metadata 
 
 ### Rule ROC-MED-COT: The RO-Crate Metadata Descriptor MUST have a at least one conformsTo property that matches {"@id": "TODO"}
 
+
 ### Rule ROC-MED-ABT:The RO-Crate Metadata Descriptor MUST have an `about` property which is a reference to an another entity present in the '@graph',  which entity is known as the  _Root Entity_
 
 
+### Rule ROC-MED-ONE: If the Context indicates that this is an RO-Crate version is less than 2.0 then clients MUST act as if the _Root Entity_ has a conformsTo property that references the "_Base RO-Crate Distribution Profile_"* 
+
+\*Conversely if the RO-Crate version is 2.x then no assumption is made that that an _Syntactially Valid RO-Crate Metadata Document_ is intended to be a data distribution.
+
 If all the points in 1 are satisfied the RO-Crate Metadata Document is said to be "Syntactically Correct RO-Crate compliant JSON"
+
+# Default RO-Crate Packaging Profile
+
+
+
 
 # RO-Crate Packaging
 
-The main function of RO-Crate is as a packaging method to describe locally present or remote files.
+When RO-Crate conventions are used to package data
 
-TODO - rules for the special category of Data Entity 
+## Rule ROC-PAK-DST: All RO-Crate packages, Local or Detatched MUST conform to the _Base RO-Crate Distribution Profile_
+
+### Rule ROC-PAK-DET 
+
+
+Data entities may have @ids that are Relative URIs - if they do then they MUST have contentURL
+
+else @ids must be fully qualifies URIs
+
+
+
+
+### Rule ROC-PAK-LOC-URL
+
+Data entities (of type File or Dataset) MAY have URL IDs
+
+#### Rule ROC-PAK-LOC-REL DATA entities may have relative URIs for IDs
+
+IF there is a contentURL then the File  may or may not be present, and it is assumed that it may be fetched from contentUrl
+
+ELSE the file must be present
+
+
 
 
