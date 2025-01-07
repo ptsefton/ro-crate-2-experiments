@@ -13,11 +13,15 @@ Design goals:
 
 # Specification outline
 
-RO-Crate is a data _Packaging_ specification which allows for detailed, rigorous metadata to be provided for a data set, with a _Local_ collection of files or a _Detached_. 
+RO-Crate is a data _Packaging_ specification which allows for detailed, rigorous linked-data metadata to be provided for a dataset, with a _Local_ collection of files or _Detached_, web-based, data. RO-Crate allows for detailed context to be provided for data down to and inside-of the File level.
+
+While RO-Crate metada is compliant JSON-LD it is designed so that it may be processed by tools which _do not_ implement the full JSON-LD specification. 
+
+RO-Crate conventions can also be used for describing entities other than datasets for applications where an easy-to-implement linked-data tool-set is required, for example, the Schema.org vocabulary, which is a set of RDF classes and properties, used by RO-Crate can be described and extended using an RO-Crate as a container. 
 
 RO-Crate 2.0 specifies two levels of conformance for a text-string known as the RO-Crate Metadata Document.
 
-- *Syntactically valid*: The string can be parsed into an _RO-Crate Metadata Object_ which has structural conformance with this specification. (It is JSON, it is valid JSON-LD with a `@graph` and `@context` key which meet certain constraints). While RO-Crate metada is compliant JSON-LD it is designed so that it may be processed by tools which _do not_ implement the full JSON-LD specification. 
+- *Syntactically valid*: The string can be parsed into an _RO-Crate Metadata Object_ which has structural conformance with this specification. (It is JSON, it is valid JSON-LD with a `@graph` and `@context` key which meet certain constraints).
   
   RO-Crate Metadata objects are the basis of RO-Crate packaging, but can be used for non-packaging purposes as well.
 - *Valid Package*: The _Syntactically Valid RO-Crate Metadata Document_ also meets the semantic constraints to need to be an _RO_Crate Package_:
