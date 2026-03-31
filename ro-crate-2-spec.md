@@ -1,28 +1,21 @@
 
 
 
-_RO-Crate 2.0 Specification URL_: https://w3id.org/ro/crate/2.0-DRAFT
-_RO-Crate 2.0 Specification Syntax URL_: https://w3id.org/ro/crate/2.0-DRAFT#Syntax
-_RO-Crate 2.0 Specification Detached Package URL_: https://w3id.org/ro/crate/2.0-DRAFT#DetatchedPackage
-_RO-Crate 2.0 Specification LOCAL Package URL_: https://w3id.org/ro/crate/2.0-DRAFT#LocalPackage
-_RO-Crate 2.0 Default Distribution Profile_: https://w3id.org/ro/crate/2.0/default-disto-profile
+# RO-Crate v2.0 SKETCH -- EXPERIMENTAL ONLY
 
-_RO-Crate 2.O Context URL_: "https://w3id.org/ro/crate/2.0-DRAFT/context"
+This work dates from January 2025, I (@ptsefton) am cleaning it up to show the RO-Crate v2.0 working group.
 
 ## Changes from previous RO-Crate versions
 
-RO-Crate version 1.x crates are included in this specification - which specifies modes of operation for software to process, repair and upgrade RO-Crate metadata documents.
+RO-Crate version 1.x crates are compatible with the rules in this specification - which specifies modes of operation for software to process, repair and upgrade RO-Crate metadata documents.
 
 The core RO-Crate specification now specifies ONLY:
 - The structure and syntax of an RO-Crate Metadata Document
-- The rules for detached and local data packages (presence of Files, how to download a detatched crate etc)
+- The rules for detached and local data packages (presence of Files, how to download a detached crate etc)
 
 The sections of the 1.x specification dealing with metadata, the root data entity etc have moved to a Profile (https://w3id.org/ro/crate/2.0/default-disto-profile)
 
-
-All other parts of the specification will be moved to guidelines which do not form part of the specification.
-
-
+All other parts of the specification will be moved to guidelines or profiles which do not form part of the specification.
 
 
 # Specification summary
@@ -33,16 +26,15 @@ While RO-Crate metadata is compliant JSON-LD it is designed so that it may be pr
 
 RO-Crate conventions can also be used for describing entities other than datasets for applications where an easy-to-implement linked-data tool-set is required. As an example, the abstract the Schema.org vocabulary, which is a set of RDF classes and properties can be described and extended using an RO-Crate Metadata Document as a container. 
 
-
 RO-Crate 2.0 specifies two levels of conformance for a text-string, known as the _RO-Crate Metadata Document_.
 
-- *Syntactically valid*: The _RO-Crate Metadata Document_ string can be parsed into an _RO-Crate Metadata Object_ which has structural conformance with this specification. (It is JSON, it is valid JSON-LD with a `@graph` and `@context` key which meet certain constraints).
+- *Valid RO-Crate Metadata Document_ *: The _RO-Crate Metadata Document_ string can be parsed into an _RO-Crate Metadata Object_ which has structural conformance with this specification. (It is JSON, it is valid JSON-LD with a `@graph` and `@context` key which meet certain constraints).
   
   _RO-Crate Metadata Objects_ are the basis of RO-Crate packaging, but can be used for non-packaging purposes as well.
 
   An RO-Crate Metadata Document (whether or not is is a valid package) may have rich contextual information about the data, how it was collected  and by whom, with details of funding, related information, equipment and facilities, or about abstract entities.  
   
-  The details of this contextual information are the domain of _RO-Crate Profiles_ which are concerned with semantics. Profiles are guides with optional validation services that describe how to use RO Crate Metadata for a particular purpose, such as; interchanging workflow software, describing vocabularies/schemas, or structuring archival repositories.
+  The details of this contextual information are the domain of _RO-Crate Profiles_ which are concerned with semantics. Profiles are guides with optional validation services that describe how to use RO Crate Metadata for a particular purpose, such as; packaging instrument data, interchanging workflows between environments, describing vocabularies/schemas, or structuring archival repositories into data-objects that are grouped into collections.
 
 - *Valid Package*: The _Syntactically Valid RO-Crate Metadata Document_ also meets the semantic constraints to need to be an _RO_Crate Package_:
     - The _Root Entity_ conformsTo the _Default RO-Crate Distribution Profile_, which specifies the required  and recommended properties of the _Root Entity_ . In RO-Crate v2 conformance  with this profile  is  optional and is indicated by the a reference to the URL of _Default RO-Crate Distribution Profile_ as one of the values of the `conformsTo` properties. When processing legacy crates with version <2 this conformance is assumed (as previous versions of RO-Crate included these requirements as part of the specification).
@@ -62,13 +54,15 @@ TODO: Potential new "RO-Crate Fragment"????
 
 # RO-Crate rules
 
-The Core RO-Crate 2.0 specification is concerned with the syntactical correctness of RO-Crate Metadata documents, and teh conformance of packages and is ordered in a way to guide implementers building RO-Crate software, such as parsers or libraries.
+The Core RO-Crate 2.0 specification is concerned with the syntactical correctness of RO-Crate Metadata documents and conformance of packages, and is ordered in a way to guide implementers building RO-Crate software, such as parsers or libraries.
 
 The specification has a number of `Rules`, each of which is assigned a code. Rules are hierarchically grouped.
 
-There are two modes of operation:
+There are three modes of operation:
 - Default: software should run, emit as many errors and success codes as possible, only terminating if it cannot continue (such as the input is not in JSON format)
-- Repair Mode: when correctable errors are encountered, software MUST modify the _RO-Crate Metadata Object_ to make it compliant. NOTE: This mode changes the input document in a non-deterministic way so there needs to a be an option for users to save the result as new file, or over-write the original, with informed consent
+
+- Repair Mode: when correctable errors are encountered, software MUST modify the _RO-Crate Metadata Object_ to make it compliant. NOTE: This mode changes the input document so there needs to a be an option for users to save the result as new file, or over-write the original
+
 - Upgrade mode(packageType): This mode will automatically update a pre-v2.0 crate to the new standard creating a new RO-Crate Metadata Object clients SHOULD NOT automatically write this new metadata document over an existing ro-crate-metadata.json file without user consent as this may compromise the integrity of an archival or scholarly process.  This mode may also take a packageType parameter where the value of Package type is "Local" or "Distributed"
 
 Software MUST return an error code for each error that is detected and MUST return a success code if all of the nested rules return no errors.
@@ -95,16 +89,17 @@ The core structure of an RO-Crate is
 
 
 
-### Rule ROC-JSN: The RO-Crate metadata document MUST be valid JSON 
+### Rule `ROC-JSN`: The RO-Crate metadata document MUST be valid JSON 
 
-Implementation note: Client-software should attempt to parse a potential RO-Crate Metadata Document as a JSON string using the language's default JSON parser and catpture an error message in `$err`.
+Implementation note: Client-software should attempt to parse a potential RO-Crate Metadata Document as a JSON string using the language's default JSON parser and capture any error message in `$err`.
 
 FATAL Error Code: ERR_RCOJSON `The document does not parse as JSON: ${err}`
 
 
-### Rule ROC-CXT: The _RO-Crate metadata Object_ MUST have a  compliant @context 
+### Rule Group `ROC-CXT`: The _RO-Crate metadata Object_ MUST have a  compliant @context 
 
-#### Rule ROC-CXT-KEY: The _RO-Crate metadata Object_ has a top level key `@context`
+
+#### Rule `ROC-CXT-KEY:` The _RO-Crate metadata Object_ has a top level key `@context`
 
 Implementation hint: Clients should check for the existence of a key "@context" in the _RO-Crate metadata Object_.
 
@@ -115,7 +110,7 @@ UPDATE-MODE: Replace older "@context" with latest default context
 Error:`The RO-Crate metadata Object does not have a top level key, @context `.
 
 
-### Rule: ROC-CXT-ROC one value of `@context` MUST be a string starting with INSERT URL TO CONTEXT
+### Rule: `ROC-CXT-ROC` one value of `@context` MUST be a string starting with INSERT URL TO CONTEXT
 
 Implementation note: Cast the value of `@context` to an array. The Context array must contain one value that matches the RO-Crate 2 context URL
 
@@ -123,7 +118,7 @@ Implementation note: Cast the value of `@context` to an array. The Context array
 Error: `The RO-Crate Metadata Object does not have a Context beginning with https://TOTO`
 
 
-## ROC-GPH : The @graph is an array of JSON-LD entities which are flattened and compacted according to the JSON-LD specification
+## Rule Group `ROC-GPH` : The @graph is an array of JSON-LD entities which are flattened and compacted according to the JSON-LD specification
 
 ### Rule `ROC-GPH-KEY`: There MUST  a `@graph` key
 
@@ -146,7 +141,6 @@ Implementation note: Building a map of entity `@id`s is a useful thing to here.
 
 REPAIR-MODE: Assign  `$entity["@id`] to a unique value starting with `#`.
 
-
 Error: `Entity does not have an @id property: ${entity}`
 
 Implementation note: this simplest way to ensure uniqueness of IDs is to use a UUID - otherwise a scan of all existing `@id`s
@@ -155,7 +149,7 @@ Implementation note: this simplest way to ensure uniqueness of IDs is to use a U
 
 Id an @id has been previously detected on another enity then produce an error
 
-REPAIR-MODE: Assign a unique `@id` string which starts with `#` 
+REPAIR-MODE: Assign a unique `@id` string which starts with `#` ? Or append a string to make it uniqur
 
 Error: `@ids in the graph must be unique - entity["@id"] is not unique`
 
@@ -165,9 +159,14 @@ REPAIR-MODE: Add `@type`: "Thing"
 
 Error: `Entity does not have an @type property: ${entity}`
 
-#### Rule `ROC-GPH-ENT-PRP` Each property on the entity other than `@id` and `@type` has a conformant value
+#### Rule Group `ROC-GPH-ENT-PRP` Each property on the entity other than `@id` and `@type` has a conformant value
 
-#### Rule `ROC-GPH-ENT-PRP-VAL` All properties other than `@id` and `@type` MUST consist of either a single `value` OR an array of values where each value is either a string or a object which is a reference to an identifier of the form `{"@id": "some-value"}`
+
+##### Rule `ROC-GPH-ENT-PRP-ATS` Special JSON-LD properties starting with `@` are not allowed (apart from @value used with @language)
+
+TODO
+
+##### Rule `ROC-GPH-ENT-PRP-VAL` All properties other than `@id` and `@type` MUST consist of either a single `value` OR an array of values where each value is either a string or a object which is a reference to an identifier of the form `{"@id": "some-value"}`
 
 For each value check that it is either a string or and object that has one `@id` property with a string value.
 
@@ -217,6 +216,9 @@ If all the points above are satisfied the RO-Crate Metadata Document is said to 
 
 ## Rule ROC-PAK: Data packaging
 
+### Rule ROC-PAK-DST: Packages  MUST conform to the _Base RO-Crate Distribution Profile_
+
+
 ### Rule ROC-PAK-DAE: Entities of type File or Dataset are considered to be _Data Entities_ which are subject to some constraints on @ids
 
 Rules for interpreting the `@id` of a [File] _Data Entity_ differ in the context of use.
@@ -231,7 +233,6 @@ Rules for interpreting the `@id` of a [File] _Data Entity_ differ in the context
 
 ### Rule ROC-PAK-DET: An _RO-Crate Metadata Object_ is considered to be a Detached RO-Crate Package if it has a conformsTo value that references the _RO-Crate Detached Package Profile_ OR it confoema RO-Crate v1.x and is being processed in "Detached Mode"
 
-### Rule ROC-PAK-DET-DST: Detatched Packages  MUST conform to the _Base RO-Crate Distribution Profile_
 
 
 ### Rule 
@@ -248,11 +249,9 @@ Rules for interpreting the `@id` of a [File] _Data Entity_ differ in the context
 <a name="https://w3id.org/ro/crate/2.0-DRAFT#LocalPackage">
 </a>
 
-## Rule ROC-PAK-LOC: An _RO-Crate Metadata Object_ is considered to be a Local RO-Crate Package if it has a conformsTo value that references {"@id": "https://w3id.org/ro/crate/2.0-DRAFT#LocalPackage"}
+### Rule ROC-PAK-LOC: An _RO-Crate Metadata Object_ is considered to be a Local RO-Crate Package if it has a conformsTo value that references {"@id": "https://w3id.org/ro/crate/2.0-DRAFT#LocalPackage"}
 
-## Rule ROC-PAK-LOC-DST: Local Packages MUST conform to the _Base RO-Crate Distribution Profile_
 
-#### Must have a conformsTo value of {"@id": }
 
 
 *  IF `@id` is a relative path URI (`$path`), test whether a payload file exists in the local file system at `$path` relative to the _RO-Crate Root_:
