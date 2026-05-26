@@ -1,0 +1,22 @@
+@startuml
+!include ../generated/style.puml
+start
+:Level 0: Syntactically correct RO-Crate Metadata Document\nThe document-string parses as JSON, has a basic JSON-LD flattened @graph structure with a single @context at the root level and has an RO-Crate Metadata descriptor with a singleton @type value of http://schema.org/CreativeWork that references another entity in the graph, known as the RO-Crate Root Entity. Entities in the graph are flattenend, and contain only scalar values, references by @id or @value nodes.;
+note right: Rule: Document is JSON-LD
+note right: Rule: Document has a @graph key
+if ("Conforms?") then ([Yes])
+:Level 1: RO-Crate Metadata Document is a syntactically conformant versioned RO-Crate\nDocument indicates sytactic/structural conformance with a published version of RO-Crate, and validates against the relevant RO-Crate profile. TODO: Specify an end point to download a list of allowable versions. Documents that comply with this level: Are explicitly versioned RO-Crate metadata documents Can be validated against the referenced RO-Crate version;
+note right: Rule: conformsTo includes a published RO-Crate specification URI
+note right: Rule: RO-Crate version URI is recognized as allowable
+note right: Rule: RO-Crate Metadata-document validates agains the relevant versioned RO-Crate
+if ("Conforms?") then ([Yes])
+:Level 2: Packaging Conformance Level 2\nThe for a valid RO-Crate data package: There must be always be an RO-Crate Metadata Document which conforms to the basic RO-Crate Core Profile (Has a name, date, license whatever) Then this can be processed in two ways: In a file-system like context - must be called ro-crate-metadata.json and be in a directory In-memory where there is no local directory;
+note right: Rule: Metadata document conforms to basic RO-Crate Core Profile
+note right: Rule: Packaging mode is identified
+if ("Conforms?") then ([Yes])
+  stop
+else ([No])
+  :Does not conform to Level 2;
+  stop
+endif
+@enduml

@@ -1,0 +1,28 @@
+' PlantUML style for RO-Crate conformance flowchart
+
+<style>
+element {
+  MaximumWidth 200
+}
+</style>
+
+
+skinparam rectangle {
+  BackgroundColor #ffff99
+  BorderColor #333333
+  BorderThickness 2
+  RoundCorner 10
+  FontSize 18
+  FontName Arial
+  wrapWidth 30
+}
+skinparam note {
+  BackgroundColor #ff6666
+  BorderColor #333333
+  BorderThickness 2
+  FontColor black
+  FontSize 16
+  FontName Arial
+  wrapWidth 30
+}
+skinparam defaultTextAlignment left
