@@ -13,3 +13,40 @@ Design goals:
   -  Strip back context to only terms used 
 
 
+
+Notes - PT and ML
+
+
+
+
+Take a File entity: 
+“Attached” mode: 
+The @id is a local path. The following rules are only important when you are working in File system context. (these are extra modes to with how you deal with external resources)
+File may be there
+File may be not there but there’s a URI where you SHOULD be able to get it - probably schema:url – contingent so  (Sparse crate) 
+Not there - is an err
+What to do when an @id is a URL and it’s there - how to download into the crate? (extra prop for downloadAsFilePath) then swap that into @id and move the @id to URL
+
+API context:
+Use the recommended local path
+
+## Running Tests
+
+This project uses [Mocha](https://mochajs.org/) for conformance testing.
+
+To run all tests:
+
+```
+npm test
+```
+
+Or directly with:
+
+```
+npx mocha
+```
+
+Test files are located under the `test/` directory, organized by conformance rule. Good and bad test data for each rule are in their respective `data/good` and `data/bad` folders.
+
+The main validator logic is in `scripts/ro-crate-metadata-doc-validator.js`.
+
