@@ -9,12 +9,11 @@ There are three conformance levels as shown in this summary:
 
 
 
-## Conformance Level 0: Syntactically correct RO-Crate Metadata Document <a name='#rule:roc-metadata-doc'>
+## Conformance Level 0: Structurally correct RO-Crate Metadata Document <a name='#rule:level-0-roc-metadata-doc'>
 
 ### Summary
 
 The document-string:
-
 - parses as JSON
 - has a basic JSON-LD flattened @graph structure 
  - a single @context at the root level and 
@@ -22,48 +21,84 @@ The document-string:
 - Entities in the graph are flattenend, and contain only scalar values, references by `@id` or `@value` nodes. 
 
 ### Exit point
-Documents that comply with this level can be used in linked-data applications that require a graph of entities in a predicatable format.
 
+Documents that comply with the following rules can be used in linked-data applications that require a graph of entities in a predicatable format.
 
-### Rule: Document is JSON-LD <a name='#rule:roc-metadata-doc-is-JSON'>
+### Rule: Document is valid  JSON <a name='#rule:roc-metadata-doc-is-JSON'>
+
+The RO-Crate Document String is valid JSON.
+
+[Test data](/Users/pt/working/ptsefton/ro-crate-2-experiments/test/rule-level-0-roc-metadata-doc/roc-metadata-doc-is-JSON/data/)
+
+[Tests](/Users/pt/working/ptsefton/ro-crate-2-experiments/test/rule-level-0-roc-metadata-doc/roc-metadata-doc-is-JSON/validate.test.cjs)
+
 
 #### Rule: Document has a @context key <a name='#rule:roc-metadata-doc-has-context'>
 
 The @context may be a single scalar value or an array.
 
-One of the values must be an RO-Crate specification versioned URI
+[Test data](/Users/pt/working/ptsefton/ro-crate-2-experiments/test/rule-level-0-roc-metadata-doc/roc-metadata-doc-has-context/data/)
 
-TODO: Can the be an unversioned "I'm and RO-Crate URI"???
-
-##### Rule: @context includes an RO-Crate URI  <a name='#rule:roc-metadata-doc-has-ro-crate-context'>
+[Tests](/Users/pt/working/ptsefton/ro-crate-2-experiments/test/rule-level-0-roc-metadata-doc/roc-metadata-doc-has-context/validate.test.cjs)
 
 
-### Rule: Document has a @graph key <a name='#rule:roc-metadata-doc-is-JSON'>
-
-#### Rule: @graph is an array <a name='#rule:@graph-is-array'>
-
-#### Rule: @graph contains a RO-Crate Metadata Descriptor <a name='#rule:@graph-is-array'>
-
-NOTE: thinking to relax the defintion of Root Data Entity to have just the @id and about props as described here - conformance to a particular RO-Crate version cn be check using MASP once we have met 
 
 
-#### Rule: Each entity is conformant <a name='#rule:graph-entities-conform'>
 
-For each entity the following must be true
-##### Rule: Entity conforms <a name='#rule:entity-conforms'>
+### Rule: Document has a @graph key whose value is an array <a name='#rule:roc-metadata-doc-has-graph'>
+
+[Test data](/Users/pt/working/ptsefton/ro-crate-2-experiments/test/rule-level-0-roc-metadata-doc/roc-metadata-doc-has-graph/data/)
+
+[Tests](/Users/pt/working/ptsefton/ro-crate-2-experiments/test/rule-level-0-roc-metadata-doc/roc-metadata-doc-has-graph/validate.test.cjs)
+
+
+
+
+
+
+##### Rule: Every entity in the @graph array conforms to RO-Crate constraints <a name='#rule:entities-conform'>
+
+
 
 ###### Rule: Entity has an @id <a name='#rule:entity-id'>
 
+[Test data](/Users/pt/working/ptsefton/ro-crate-2-experiments/test/rule-level-0-roc-metadata-doc/entity-id/data/)
 
-####### Rule: File Entity id is a path or a URI <a name='#rule:file-ntity-id'>
+[Tests](/Users/pt/working/ptsefton/ro-crate-2-experiments/test/rule-level-0-roc-metadata-doc/entity-id/validate.test.cjs)
 
-IF the entity is @type resolves to http://Schema.org/MediaObject using the JSON-LD context resolution rules AND the value contains "File" 
+###### Rule: Entity has an @type with at least one string value <a name='#rule:entity-type'>
+
+[Test data](/Users/pt/working/ptsefton/ro-crate-2-experiments/test/rule-level-0-roc-metadata-doc/entity-type/data/)
+
+[Tests](/Users/pt/working/ptsefton/ro-crate-2-experiments/test/rule-level-0-roc-metadata-doc/entity-type/validate.test.cjs)
+
+###### Rule: Each key in the entity has either a singleton or an array of string values, a JSON-LD @value with no @context key,  or is an entity reference  <a name='#rule:entity-values'>
+
+[Test data](/Users/pt/working/ptsefton/ro-crate-2-experiments/test/rule-level-0-roc-metadata-doc/entity-values/data/)
+
+[Tests](/Users/pt/working/ptsefton/ro-crate-2-experiments/test/rule-level-0-roc-metadata-doc/entity-values/validate.test.cjs)
+
+NOTE: the definition of a value object is per the JSON-LD 1.1 specification but RO-Crate does NOT allow for @context [JSON-LD Value Object](https://www.w3.org/TR/json-ld11/#value-objects)
+
+
 
 ####### Rule: file Entity id is a path or a URI <a name='#rule:filentity-id'>
 
+#### Rule: @graph contains a RO-Crate Metadata Descriptor with @id = "ro-crate-metadata.json" <a name='#rule:@graph-has-a-metadata-descriptor'> and an "about" property referencing another entity in the graph
+
+[Test data](/Users/pt/working/ptsefton/ro-crate-2-experiments/test/rule-level-0-roc-metadata-doc/roc-metadata-doc-has-metadata-descriptor/data/)
+
+[Tests](/Users/pt/working/ptsefton/ro-crate-2-experiments/test/rule-level-0-roc-metadata-doc/roc-metadata-doc-has-metadata-descriptor/validate.test.cjs)
+
+NOTE: thinre - conformance to a particular RO-Crate version can be checked using MASP once we have met king to relax the defintion of Root Data Entity to have just the @id and about props as described he
 
 
-## Conformance Level 1:  RO-Crate Metadata Document is a syntactically conformant versioned RO-Crate  <a name='#rule:roc-metadata-doc-is-an-ro-crate'>
+
+
+
+
+
+## Conformance Level 1:  RO-Crate Metadata Document indicates RO-Crate conformance  <a name='#rule:level-1-roc-metadata-doc-is-an-ro-crate'>
 
 ### Summary
 Document indicates sytactic/structural conformance with a published version of RO-Crate, and validates against the relevant RO-Crate profile.
@@ -75,10 +110,28 @@ Documents that comply with this level can be used to generate a visualization su
 
 ### Summary
 Documents that comply with this level:
--   Are explicitly versioned RO-Crate metadata documents
--  Can be validated against the referenced RO-Crate version
+-  Are explicitly versioned RO-Crate metadata Documents
+-  Can be validated against the referenced RO-Crate version for structural conformance
+
+
+
+### Rule: @context includes exactly one RO-Crate URI  <a name='#rule:roc-metadata-doc-has-ro-crate-context'>
+
+[Test data](/Users/pt/working/ptsefton/ro-crate-2-experiments/test/rule-level-1-roc-metadata-doc-is-an-ro-crate/roc-metadata-doc-has-ro-crate-context/data/)
+
+[Tests](/Users/pt/working/ptsefton/ro-crate-2-experiments/test/rule-level-1-roc-metadata-doc-is-an-ro-crate/roc-metadata-doc-has-ro-crate-context/validate.test.cjs)
+
+TODO: Given that we have this context -- do we really need to duplicate this in a conformsTo that points to an RO-Crate?
+
+### Rule: each key in the entity resolves to URI in a way that does not change the way it would resolve with only the relevant RO-Crate context <a href="#rule:keys-resolve-to-ro-crate-context">
+
+The intent of this rule is that the @context for the RO-Crate does not break 'native' RO-Crate mappings, eg a crate wich maps "name" to something other than "http://schema.org/name"
+
+TODO: (copilot) If we later need to validate this beyond a simple URI pattern match, the jsonld.js library already has the internal `ContextResolver` used by `jsonld.processContext()`, `jsonld.expand()`, and `jsonld.frame()`. The relevant internals are `ContextResolver.resolve()`, `_resolveRemoteContext()`, `_fetchContext()`, and `_resolveContextUrls()`, but these are not exposed as a separate public context-resolver API, so we would need to wire that in through the library options or import the internal module directly.
 
 ### Rule: <a name='#rule:metadata-descriptor-has-conformsTo'>
+
+TODO: Not sure if we need this??
 
 #### Rule: conformsTo includes a published RO-Crate specification URI <a name='#rule:conformsTo-includes-published-spec-uri'>
 
@@ -92,15 +145,23 @@ Documents that comply with this level:
 
 ## Conformance Level 2: Packaging Conformance Level 2
 
-NOTE: Looks like a data package has correct IDs on File and Dataset etc but no SEMANTIC checking yet - ie do the files exist.
-
 
 ### Summary
+
 The for a valid RO-Crate data package:
  There must be always be an RO-Crate Metadata Document which conforms to the basic RO-Crate Core Profile (Has a name, date, license whatever)
-Then this can be processed in two ways:
-In a file-system like context - must be called ro-crate-metadata.json and be in a directory
-In-memory where there is no local directory
+
+
+Then this can be validated against three profiles:
+-  #detached - All Data Entities must have full URIs
+-  #attached - Data entities with relative URIs must be present
+-  #archival - Data entities with relative URIs must be present and all files must be described in the RO-Crate Metadata Document
+
+
+##### Rule: RO-Crate Metadata Descriptor indicates conformance to some profile via a conformsTo property <a name='#rule:@metadata-descriptor-has-conformsTo'>
+
+(This conforms to may be an RO-Crate version)
+
 
 ### Rule: Metadata document conforms to basic RO-Crate Core MASP Profile <a name='#rule:metadata-document-conforms-basic-core-profile'>
 

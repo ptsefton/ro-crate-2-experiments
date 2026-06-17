@@ -1,0 +1,4 @@
+{
+  "@id": "file.txt",
+  "@type": ["File", "MediaObject"]
+}

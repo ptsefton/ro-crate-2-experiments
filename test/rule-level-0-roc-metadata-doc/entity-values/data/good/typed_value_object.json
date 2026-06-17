@@ -1,0 +1,5 @@
+{
+  "@id": "./",
+  "@type": "Dataset",
+  "size": {"@value": 42, "@type": "xsd:integer"}
+}

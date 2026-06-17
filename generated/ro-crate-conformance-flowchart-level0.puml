@@ -1,7 +1,7 @@
 @startuml
 !include ../generated/style.puml
 start
-:Level 0: Syntactically correct RO-Crate Metadata Document;
+:Level 0: Structurally correct RO-Crate Metadata Document;
 note left #ffff99
 The document-string:
 * parses as JSON
@@ -11,16 +11,16 @@ The document-string:
 * Entities in the graph are flattenend, and contain only scalar values, references by `@id` or `@value` nodes.
 end note
 note right #ff6666
-Documents that comply with this level can be used in linked-data applications that require a graph of entities in a predicatable format.
+Documents that comply with the following rules can be used in linked-data applications that require a graph of entities in a predicatable format.
 end note
 if ("Conforms?") then ([Yes])
-:Level 1: RO-Crate Metadata Document is a syntactically conformant versioned RO-Crate;
+:Level 1: RO-Crate Metadata Document indicates RO-Crate conformance;
 note left #ffff99
 Document indicates sytactic/structural conformance with a published version of RO-Crate, and validates against the relevant RO-Crate profile.
 TODO: Specify an end point to download a list of allowable versions.
 Documents that comply with this level:
-*   Are explicitly versioned RO-Crate metadata documents
-*  Can be validated against the referenced RO-Crate version
+*  Are explicitly versioned RO-Crate metadata Documents
+*  Can be validated against the referenced RO-Crate version for structural conformance
 end note
 note right #ff6666
 Documents that comply with this level can be used to generate a visualization such as ro-crate-preview.html or processed for analytical purposes.
@@ -30,9 +30,10 @@ if ("Conforms?") then ([Yes])
 note left #ffff99
 The for a valid RO-Crate data package:
  There must be always be an RO-Crate Metadata Document which conforms to the basic RO-Crate Core Profile (Has a name, date, license whatever)
-Then this can be processed in two ways:
-In a file-system like context - must be called ro-crate-metadata.json and be in a directory
-In-memory where there is no local directory
+Then this can be validated against three profiles:
+*  #detached - All Data Entities must have full URIs
+*  #attached - Data entities with relative URIs must be present
+*  #archival - Data entities with relative URIs must be present and all files must be described in the RO-Crate Metadata Document
 end note
 if ("Conforms?") then ([Yes])
   stop

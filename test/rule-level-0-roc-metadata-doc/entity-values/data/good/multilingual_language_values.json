@@ -1,0 +1,22 @@
+{
+  "@id": "./",
+  "@type": "Dataset",
+  "name": [
+    {
+      "@value": "Example crate",
+      "@language": "en"
+    },
+    {
+      "@value": "Beispielkiste",
+      "@language": "de"
+    },
+    {
+      "@value": "Caisse d'exemple",
+      "@language": "fr"
+    },
+    {
+      "@value": "Ejemplo de paquete",
+      "@language": "es"
+    }
+  ]
+}

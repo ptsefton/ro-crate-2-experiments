@@ -1,0 +1,4 @@
+{
+  "@context": ["https://w3id.org/ro/crate/2.0/context", {"@vocab": "http://schema.org/"}],
+  "@graph": []
+}

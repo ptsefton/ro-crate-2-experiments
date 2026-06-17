@@ -1,0 +1,27 @@
+{
+  "@context": [
+    "https://w3id.org/ro/crate/1.2-DRAFT/context",
+    {
+      "name": "http://schema.org/name"
+    }
+  ],
+  "@graph": [
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "name": "RO-Crate Metadata Descriptor",
+      "conformsTo": {
+        "@id": "https://w3id.org/ro/crate/2.0"
+      },
+      "about": {
+        "@id": "./"
+      }
+    },
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "Example crate",
+      "description": "A valid mapping example"
+    }
+  ]
+}

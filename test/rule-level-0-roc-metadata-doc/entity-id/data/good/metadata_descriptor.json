@@ -1,0 +1,7 @@
+{
+  "@id": "ro-crate-metadata.json",
+  "@type": "CreativeWork",
+  "about": {
+    "@id": "./"
+  }
+}

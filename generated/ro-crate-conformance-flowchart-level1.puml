@@ -1,18 +1,47 @@
 @startuml
 !include ../generated/style.puml
 start
-:Level 0: Syntactically correct RO-Crate Metadata Document\nThe document-string parses as JSON, has a basic JSON-LD flattened @graph structure with a single @context at the root level and has an RO-Crate Metadata descriptor with a singleton @type value of http://schema.org/CreativeWork that references another entity in the graph, known as the RO-Crate Root Entity. Entities in the graph are flattenend, and contain only scalar values, references by @id or @value nodes.;
-note right: Rule: Document is JSON-LD
-note right: Rule: Document has a @graph key
+:Level 0: Structurally correct RO-Crate Metadata Document;
+note left #ffff99
+The document-string:
+* parses as JSON
+* has a basic JSON-LD flattened @graph structure
+ - a single @context at the root level and
+ - *RO-Crate Metadata descriptor entity* with a singleton @type value of `http://schema.org/CreativeWork` that references another entity in the graph, known as the RO-Crate Root Entity.
+* Entities in the graph are flattenend, and contain only scalar values, references by `@id` or `@value` nodes.
+end note
+note right #ff6666
+Documents that comply with the following rules can be used in linked-data applications that require a graph of entities in a predicatable format.
+end note
+note right: Rule: Document is valid  JSON
+note right: Rule: Document has a @graph key whose value is an array
 if ("Conforms?") then ([Yes])
-:Level 1: RO-Crate Metadata Document is a syntactically conformant versioned RO-Crate\nDocument indicates sytactic/structural conformance with a published version of RO-Crate, and validates against the relevant RO-Crate profile. TODO: Specify an end point to download a list of allowable versions. Documents that comply with this level: Are explicitly versioned RO-Crate metadata documents Can be validated against the referenced RO-Crate version;
-note right: Rule: conformsTo includes a published RO-Crate specification URI
-note right: Rule: RO-Crate version URI is recognized as allowable
+:Level 1: RO-Crate Metadata Document indicates RO-Crate conformance;
+note left #ffff99
+Document indicates sytactic/structural conformance with a published version of RO-Crate, and validates against the relevant RO-Crate profile.
+TODO: Specify an end point to download a list of allowable versions.
+Documents that comply with this level:
+*  Are explicitly versioned RO-Crate metadata Documents
+*  Can be validated against the referenced RO-Crate version for structural conformance
+end note
+note right #ff6666
+Documents that comply with this level can be used to generate a visualization such as ro-crate-preview.html or processed for analytical purposes.
+end note
+note right: Rule: @context includes exactly one RO-Crate URI
+note right: Rule: each key in the entity resolves to URI in a way that does not change the way it would resolve with only the relevant RO-Crate context <a href="#rule:keys-resolve-to-ro-crate-context">
 note right: Rule: RO-Crate Metadata-document validates agains the relevant versioned RO-Crate
 if ("Conforms?") then ([Yes])
-:Level 2: Packaging Conformance Level 2\nThe for a valid RO-Crate data package: There must be always be an RO-Crate Metadata Document which conforms to the basic RO-Crate Core Profile (Has a name, date, license whatever) Then this can be processed in two ways: In a file-system like context - must be called ro-crate-metadata.json and be in a directory In-memory where there is no local directory;
-note right: Rule: Metadata document conforms to basic RO-Crate Core Profile
-note right: Rule: Packaging mode is identified
+:Level 2: Packaging Conformance Level 2;
+note left #ffff99
+The for a valid RO-Crate data package:
+ There must be always be an RO-Crate Metadata Document which conforms to the basic RO-Crate Core Profile (Has a name, date, license whatever)
+Then this can be validated against three profiles:
+*  #detached - All Data Entities must have full URIs
+*  #attached - Data entities with relative URIs must be present
+*  #archival - Data entities with relative URIs must be present and all files must be described in the RO-Crate Metadata Document
+end note
+note right: Rule: RO-Crate Metadata Descriptor indicates conformance to some profile via a conformsTo property
+note right: Rule: Metadata document conforms to basic RO-Crate Core MASP Profile
 if ("Conforms?") then ([Yes])
   stop
 else ([No])

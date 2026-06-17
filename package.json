@@ -1,0 +1,17 @@
+{
+  "name": "ro-crate-2-experiments",
+  "version": "1.0.0",
+  "description": "RO-Crate conformance diagram generator",
+  "main": "scripts/generate_conformance_plantuml.js",
+  "type": "module",
+  "scripts": {
+    "generate:plantuml": "node scripts/generate_conformance_plantuml.js --detail-level 0",
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "^10.0.0"
+  },
+  "dependencies": {
+    "jsonld": "^9.0.0"
+  }
+}
