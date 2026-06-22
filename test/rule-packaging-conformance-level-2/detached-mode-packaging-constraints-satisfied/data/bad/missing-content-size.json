@@ -1,0 +1,20 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.2-DRAFT/context",
+  "@graph": [
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "Missing contentSize crate"
+    },
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "about": { "@id": "./" }
+    },
+    {
+      "@id": "data/no-content-size.txt",
+      "@type": "File",
+      "contentUrl": "https://example.org/files/no-content-size.txt"
+    }
+  ]
+}

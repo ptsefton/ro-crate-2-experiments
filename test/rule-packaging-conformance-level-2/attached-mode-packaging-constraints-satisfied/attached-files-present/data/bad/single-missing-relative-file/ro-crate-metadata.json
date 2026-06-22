@@ -1,0 +1,19 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.2-DRAFT/context",
+  "@graph": [
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "Single missing relative file"
+    },
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "about": { "@id": "./" }
+    },
+    {
+      "@id": "data/absent.dat",
+      "@type": "File"
+    }
+  ]
+}

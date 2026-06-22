@@ -1,0 +1,20 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.2-DRAFT/context",
+  "@graph": [
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "Attached crate with contentSize mismatch"
+    },
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "about": { "@id": "./" }
+    },
+    {
+      "@id": "files/data.txt",
+      "@type": "File",
+      "contentSize": "100"
+    }
+  ]
+}

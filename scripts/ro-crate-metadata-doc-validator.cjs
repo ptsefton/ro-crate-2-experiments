@@ -3,9 +3,117 @@
 
 const ContextResolver = require('jsonld/lib/ContextResolver');
 const jsonldContext = require('jsonld/lib/context');
+const fs = require('fs');
+const path = require('path');
 
 class Roc2Validator {
   constructor() {}
+
+  _isAbsoluteIri(value) {
+    return typeof value === 'string' && /^[A-Za-z][A-Za-z0-9+.-]*:/.test(value);
+  }
+
+  _isRelativeIri(value) {
+    return typeof value === 'string' && !value.startsWith('#') && !value.startsWith('_') && !this._isAbsoluteIri(value);
+  }
+
+  _entityHasFileType(entity) {
+    const typeValue = entity && entity['@type'];
+    return typeValue === 'File' || (Array.isArray(typeValue) && typeValue.includes('File'));
+  }
+
+  attachedModeMetadataFileNameIsRoCrateMetadataJson(crateDirPath) {
+    if (typeof crateDirPath !== 'string' || crateDirPath.length === 0) {
+      return { pass: false, error: 'crateDirPath must be a directory path string' };
+    }
+
+    let stats;
+    try {
+      stats = fs.statSync(crateDirPath);
+    } catch (error) {
+      return { pass: false, error: `Could not access crate directory: ${error.message}` };
+    }
+
+    if (!stats.isDirectory()) {
+      return { pass: false, error: 'crateDirPath must point to a directory' };
+    }
+
+    const metadataPath = path.join(crateDirPath, 'ro-crate-metadata.json');
+    if (!fs.existsSync(metadataPath) || !fs.statSync(metadataPath).isFile()) {
+      return { pass: false, error: 'crate directory does not contain ro-crate-metadata.json at its root' };
+    }
+
+    return { pass: true, error: null };
+  }
+
+  attachedFilesPresent(crateDirPath) {
+    if (typeof crateDirPath !== 'string' || crateDirPath.length === 0) {
+      return { pass: false, error: 'crateDirPath must be a directory path string' };
+    }
+
+    let stats;
+    try {
+      stats = fs.statSync(crateDirPath);
+    } catch (error) {
+      return { pass: false, error: `Could not access crate directory: ${error.message}` };
+    }
+
+    if (!stats.isDirectory()) {
+      return { pass: false, error: 'crateDirPath must point to a directory' };
+    }
+
+    const metadataPath = path.join(crateDirPath, 'ro-crate-metadata.json');
+    if (!fs.existsSync(metadataPath) || !fs.statSync(metadataPath).isFile()) {
+      return { pass: false, error: 'crate directory does not contain ro-crate-metadata.json at its root' };
+    }
+
+    let doc;
+    try {
+      doc = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
+    } catch (error) {
+      return { pass: false, error: `Could not parse ro-crate-metadata.json: ${error.message}` };
+    }
+
+    if (!Array.isArray(doc['@graph'])) {
+      return { pass: false, error: 'ro-crate-metadata.json does not have an @graph array' };
+    }
+
+    for (const entity of doc['@graph']) {
+      if (!entity || typeof entity !== 'object' || Array.isArray(entity)) {
+        continue;
+      }
+
+      if (!this._entityHasFileType(entity)) {
+        continue;
+      }
+
+      const id = entity['@id'];
+      if (!this._isRelativeIri(id)) {
+        continue;
+      }
+
+      const resolvedPath = path.resolve(crateDirPath, id);
+      if (!resolvedPath.startsWith(path.resolve(crateDirPath) + path.sep)) {
+        return { pass: false, error: `Relative file @id resolves outside crate root: ${id}` };
+      }
+
+      if (!fs.existsSync(resolvedPath) || !fs.statSync(resolvedPath).isFile()) {
+        return { pass: false, error: `Relative file with @id must be present on disk: ${id}` };
+      }
+
+      const hasContentSize = Object.prototype.hasOwnProperty.call(entity, 'contentSize');
+      if (hasContentSize && entity.contentSize !== undefined && entity.contentSize !== null) {
+        const fileStats = fs.statSync(resolvedPath);
+        const fileSizeBytes = fileStats.size;
+        const contentSizeInt = parseInt(entity.contentSize, 10);
+        if (contentSizeInt !== fileSizeBytes) {
+          return { pass: false, error: `File ${id} has contentSize ${entity.contentSize} but actual size is ${fileSizeBytes} bytes` };
+        }
+      }
+    }
+
+    return { pass: true, error: null };
+  }
 
   _createContextDocumentLoader(contextDocuments = {}) {
     return async url => {
@@ -272,6 +380,86 @@ class Roc2Validator {
       }
     } catch (e) {
       return { pass: false, error: `Failed to resolve entity keys against context: ${e.message}` };
+    }
+
+    return { pass: true, error: null };
+  }
+
+  // Rule: detached-file-ids
+  detachedFileIdsEntity(inputString) {
+    let entity;
+    try {
+      entity = JSON.parse(inputString);
+    } catch (e) {
+      return { pass: false, error: 'Entity is not valid JSON' };
+    }
+
+    if (!entity || typeof entity !== 'object' || Array.isArray(entity)) {
+      return { pass: false, error: 'Entity must be a JSON object' };
+    }
+
+    if (!this._entityHasFileType(entity)) {
+      return { pass: true, error: null };
+    }
+
+    const id = entity['@id'];
+    if (typeof id !== 'string' || (!this._isAbsoluteIri(id) && !this._isRelativeIri(id))) {
+      return { pass: false, error: 'File entity @id must be a fully specified IRI or a relative IRI' };
+    }
+
+    const idIsRelative = this._isRelativeIri(id);
+    const hasContentUrl = Object.prototype.hasOwnProperty.call(entity, 'contentUrl') || Object.prototype.hasOwnProperty.call(entity, 'contentURL');
+    if (idIsRelative && !hasContentUrl) {
+      return { pass: false, error: 'File entities with a relative @id must have a contentUrl property' };
+    }
+
+    if (hasContentUrl) {
+      const contentUrl = Object.prototype.hasOwnProperty.call(entity, 'contentUrl') ? entity.contentUrl : entity.contentURL;
+      const contentUrls = Array.isArray(contentUrl) ? contentUrl : [contentUrl];
+      if (contentUrls.length === 0 || !contentUrls.every(value => this._isAbsoluteIri(value))) {
+        return { pass: false, error: 'File entity contentUrl must be a fully specified IRI or an array of fully specified IRIs' };
+      }
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(entity, 'contentSize') || entity.contentSize === undefined || entity.contentSize === null) {
+      return { pass: false, error: 'File entity must have a contentSize property' };
+    }
+
+    return { pass: true, error: null };
+  }
+
+  // Rule: detached-mode-constraints-satisfied
+  detachedModePackagingConstraintsSatisfied(inputString) {
+    let doc;
+    try {
+      doc = JSON.parse(inputString);
+    } catch (e) {
+      return { pass: false, error: 'Document is not valid JSON' };
+    }
+
+    const graph = doc['@graph'];
+    if (!Array.isArray(graph)) {
+      return { pass: false, error: 'Document does not have an @graph array' };
+    }
+
+    for (const entity of graph) {
+      if (!entity || typeof entity !== 'object' || Array.isArray(entity)) {
+        continue;
+      }
+
+      if (!this._entityHasFileType(entity)) {
+        continue;
+      }
+
+      const result = this.detachedFileIdsEntity(JSON.stringify(entity));
+      if (!result.pass) {
+        return {
+          pass: false,
+          error: entity['@id']
+            ? `File entity ${entity['@id']} failed detached-file-ids validation: ${result.error}`
+            : `A File entity failed detached-file-ids validation: ${result.error}`
+        };
+      }
     }
 
     return { pass: true, error: null };

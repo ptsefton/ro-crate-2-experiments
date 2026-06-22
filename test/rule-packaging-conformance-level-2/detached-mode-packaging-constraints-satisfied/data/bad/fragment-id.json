@@ -1,0 +1,21 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.2-DRAFT/context",
+  "@graph": [
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "Fragment id crate"
+    },
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "about": { "@id": "./" }
+    },
+    {
+      "@id": "#broken-file",
+      "@type": "File",
+      "contentUrl": "https://example.org/files/broken-file.txt",
+      "contentSize": 1
+    }
+  ]
+}

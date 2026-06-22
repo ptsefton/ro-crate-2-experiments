@@ -1,0 +1,24 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.2-DRAFT/context",
+  "@graph": [
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "Non-absolute contentUrl array crate"
+    },
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "about": { "@id": "./" }
+    },
+    {
+      "@id": "https://example.org/files/non-absolute-array.txt",
+      "@type": "File",
+      "contentUrl": [
+        "https://example.org/files/non-absolute-array.txt",
+        "relative/non-absolute-array.txt"
+      ],
+      "contentSize": 77
+    }
+  ]
+}

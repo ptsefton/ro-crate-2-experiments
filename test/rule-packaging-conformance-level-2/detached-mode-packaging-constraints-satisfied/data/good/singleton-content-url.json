@@ -1,0 +1,21 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.2-DRAFT/context",
+  "@graph": [
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "Singleton contentUrl crate"
+    },
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "about": { "@id": "./" }
+    },
+    {
+      "@id": "https://example.org/files/singleton.txt",
+      "@type": "File",
+      "contentUrl": "https://example.org/files/singleton.txt",
+      "contentSize": "42"
+    }
+  ]
+}

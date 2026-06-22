@@ -1,0 +1,36 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.2-DRAFT/context",
+  "@graph": [
+    {
+      "@id": "./",
+      "@type": ["Dataset"],
+      "name": "Multiple file combinations crate"
+    },
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "about": { "@id": "./" }
+    },
+    {
+      "@id": "https://example.org/files/full-array.txt",
+      "@type": "File",
+      "contentUrl": [
+        "https://example.org/files/full-array.txt",
+        "https://cdn.example.org/files/full-array.txt"
+      ],
+      "contentSize": 2048
+    },
+    {
+      "@id": "data/relative-single.txt",
+      "@type": ["File"],
+      "contentUrl": "https://example.org/files/relative-single.txt",
+      "contentSize": 17
+    },
+    {
+      "@id": "https://example.org/files/full-single.txt",
+      "@type": "File",
+      "contentUrl": "https://example.org/files/full-single.txt",
+      "contentSize": 18
+    }
+  ]
+}

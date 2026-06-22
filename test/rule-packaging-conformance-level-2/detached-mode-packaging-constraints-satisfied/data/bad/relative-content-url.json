@@ -1,0 +1,21 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.2-DRAFT/context",
+  "@graph": [
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "Relative contentUrl crate"
+    },
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "about": { "@id": "./" }
+    },
+    {
+      "@id": "data/relative-content-url.txt",
+      "@type": "File",
+      "contentUrl": "downloads/relative-content-url.txt",
+      "contentSize": 9
+    }
+  ]
+}

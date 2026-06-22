@@ -1,0 +1,20 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.2-DRAFT/context",
+  "@graph": [
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "Attached crate with relative ID plus contentUrl"
+    },
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "about": { "@id": "./" }
+    },
+    {
+      "@id": "files/from-web.bin",
+      "@type": "File",
+      "contentUrl": "https://example.org/files/from-web.bin"
+    }
+  ]
+}

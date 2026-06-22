@@ -1,0 +1,24 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.2-DRAFT/context",
+  "@graph": [
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "Array contentUrl crate"
+    },
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "about": { "@id": "./" }
+    },
+    {
+      "@id": "relative-array.txt",
+      "@type": "File",
+      "contentUrl": [
+        "https://example.org/files/relative-array.txt",
+        "https://mirror.example.org/files/relative-array.txt"
+      ],
+      "contentSize": 999
+    }
+  ]
+}

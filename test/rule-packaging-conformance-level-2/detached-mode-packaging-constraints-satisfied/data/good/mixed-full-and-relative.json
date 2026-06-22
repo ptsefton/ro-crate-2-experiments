@@ -1,0 +1,31 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.2-DRAFT/context",
+  "@graph": [
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "Mixed crate",
+      "hasPart": [
+        { "@id": "https://example.org/files/full-a.txt" },
+        { "@id": "data/relative-b.txt" }
+      ]
+    },
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "about": { "@id": "./" }
+    },
+    {
+      "@id": "https://example.org/files/full-a.txt",
+      "@type": "File",
+      "contentUrl": "https://example.org/files/full-a.txt",
+      "contentSize": 123
+    },
+    {
+      "@id": "data/relative-b.txt",
+      "@type": "File",
+      "contentUrl": "https://example.org/downloads/relative-b.txt",
+      "contentSize": 456
+    }
+  ]
+}
